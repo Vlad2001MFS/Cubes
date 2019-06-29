@@ -3,8 +3,10 @@
 #include "3rd/include/glm/glm.hpp"
 
 struct Vertex {
+    Vertex(const glm::vec3 &pos, const glm::vec3 &texCoord);
+    Vertex(float x, float y, float z, float tx, float ty, float tz);
+
     glm::vec3 pos;
-    glm::vec3 normal;
     glm::vec3 texCoord;
 };
 

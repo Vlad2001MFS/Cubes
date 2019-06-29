@@ -7,8 +7,8 @@ Renderer::Renderer(hd::RenderContext &renderContext, BlockManager &blockMgr) : m
 
     std::vector<hd::VertexElement> attribs = {
         hd::VertexElement(hd::VertexElementType::Float3, 0, 0, sizeof(float)*0, false, false),
-        hd::VertexElement(hd::VertexElementType::Float3, 1, 0, sizeof(float)*3, false, false),
-        hd::VertexElement(hd::VertexElementType::Float3, 2, 0, sizeof(float)*6, false, false)
+        //hd::VertexElement(hd::VertexElementType::Float3, 1, 0, sizeof(float)*3, false, false),
+        hd::VertexElement(hd::VertexElementType::Float3, 2, 0, sizeof(float)*3, false, false)
     };
     mVertexFormat = mRenderContext.createVertexFormat(attribs);
     
