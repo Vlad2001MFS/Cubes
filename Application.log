@@ -1,0 +1,12 @@
+OpenGL Debug:
+	Source: API
+	Type: Other
+	Id: 131185
+	Severity: Unknown
+	Message: Buffer detailed info: Buffer object 1 (bound to GL_ARRAY_BUFFER_ARB, usage hint is GL_DYNAMIC_DRAW) will use SYSTEM HEAP memory as the source for buffer object operations.
+OpenGL Debug:
+	Source: API
+	Type: Other
+	Id: 131185
+	Severity: Unknown
+	Message: Buffer detailed info: Buffer object 1 (bound to GL_ARRAY_BUFFER_ARB, usage hint is GL_DYNAMIC_DRAW) has been mapped WRITE_ONLY in SYSTEM HEAP memory (fast).
