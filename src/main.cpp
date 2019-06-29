@@ -22,21 +22,25 @@ public:
         mScene = std::make_unique<Scene>(mContext, *mBlockMgr);
         mRenderer = std::make_unique<Renderer>(mContext, *mBlockMgr);
 
-        auto chunk = mScene->createChunk(glm::ivec3(0, 0, 0));
-        for (size_t z = 0; z < 16; z++) {
-            for (size_t y = 0; y < 256; y++) {
-                for (size_t x = 0; x < 16; x++) {
-                    if (y < 42) {
-                        chunk->setBlock(BlockType::Stone, glm::ivec3(x, y, z));
-                    }
-                    else if (y < 84) {
-                        chunk->setBlock(BlockType::Dirt, glm::ivec3(x, y, z));
-                    }
-                    else if (y < 128) {
-                        chunk->setBlock(BlockType::Grass, glm::ivec3(x, y, z));
-                    }
-                    else {
-                        chunk->setBlock(BlockType::Air, glm::ivec3(x, y, z));
+        for (int cz = 0; cz < 10; cz++) {
+            for (int cx = 0; cx < 10; cx++) {
+                auto chunk = mScene->createChunk(glm::ivec3(cx, 0, cz));
+                for (size_t z = 0; z < 16; z++) {
+                    for (size_t y = 0; y < 256; y++) {
+                        for (size_t x = 0; x < 16; x++) {
+                            if (y < 42) {
+                                chunk->setBlock(BlockType::Stone, glm::ivec3(x, y, z));
+                            }
+                            else if (y < 84) {
+                                chunk->setBlock(BlockType::Dirt, glm::ivec3(x, y, z));
+                            }
+                            else if (y < 128) {
+                                chunk->setBlock(BlockType::Grass, glm::ivec3(x, y, z));
+                            }
+                            else {
+                                chunk->setBlock(BlockType::Air, glm::ivec3(x, y, z));
+                            }
+                        }
                     }
                 }
             }
