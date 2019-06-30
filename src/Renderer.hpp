@@ -12,10 +12,19 @@ public:
 private:
     hd::RenderContext &mRenderContext;
     BlockManager &mBlockMgr;
-    hd::HProgram mSimpleProgram;
-    hd::HProgramConstant mSimpleProgramProjId;
-    hd::HProgramConstant mSimpleProgramViewId;
+
     hd::HVertexFormat mVertexFormat;
     hd::HSamplerState mSamplerState;
+
+    hd::HProgram mBlockProgram;
+    hd::HProgramConstant mBlockProgramProjMatId;
+    hd::HProgramConstant mBlockProgramViewMatId;
+
+    hd::HProgram mSelectBoxProgram;
+    hd::HProgramConstant mSelectBoxProgramProjMatId;
+    hd::HProgramConstant mSelectBoxProgramViewMatId;
+    hd::HProgramConstant mSelectBoxProgramWorldMatId;
+    hd::HVertexBuffer mSelectBoxVertexBuffer;
+
     glm::mat4 mProjMat;
 };
