@@ -9,6 +9,10 @@ public:
 
     Chunk *createChunk(const glm::ivec3 &pos);
     void destroyChunk(const glm::ivec3 &pos);
+    Chunk *findChunkByPosition(const glm::ivec3 &pos) const;
+
+    void setBlock(BlockType type, const glm::ivec3 &pos);
+    BlockType getBlock(const glm::ivec3 &pos) const;
 
     void onFixedUpdate();
 

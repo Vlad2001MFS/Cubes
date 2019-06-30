@@ -31,6 +31,38 @@ void Scene::destroyChunk(const glm::ivec3 &pos) {
     }
 }
 
+Chunk *Scene::findChunkByPosition(const glm::ivec3 &pos) const {
+    auto it = std::find_if(mChunks.begin(), mChunks.end(), [&](const Chunk *chunk) { return chunk->getPosition() == pos; });
+    return it != mChunks.end() ? *it : nullptr;
+}
+
+void Scene::setBlock(BlockType type, const glm::ivec3 &pos) {
+    glm::ivec3 chunkSize = glm::ivec3(Chunk::SIZE_X, Chunk::SIZE_Y, Chunk::SIZE_Z);
+    glm::ivec3 chunkPos = pos / chunkSize;
+    Chunk *chunk = findChunkByPosition(chunkPos);
+    if (chunk) {
+        glm::ivec3 blockPos = pos % chunkSize;
+        chunk->setBlock(type, blockPos);
+    }
+    else {
+        HD_LOG_WARNING("Failed to set block on position (%d %d %d) at chunk on position (%d %d %d). The chunk is not exists", pos.x, pos.y, pos.z, chunkPos.x, chunkPos.y, chunkPos.z);
+    }
+}
+
+BlockType Scene::getBlock(const glm::ivec3 &pos) const {
+    glm::ivec3 chunkSize = glm::ivec3(Chunk::SIZE_X, Chunk::SIZE_Y, Chunk::SIZE_Z);
+    glm::ivec3 chunkPos = pos / chunkSize;
+    Chunk *chunk = findChunkByPosition(chunkPos);
+    if (chunk) {
+        glm::ivec3 blockPos = pos % chunkSize;
+        return chunk->getBlock(blockPos);
+    }
+    else {
+        HD_LOG_WARNING("Failed to get block on position (%d %d %d) from chunk on position (%d %d %d). The chunk is not exists", pos.x, pos.y, pos.z, chunkPos.x, chunkPos.y, chunkPos.z);
+        return BlockType::Air;
+    }
+}
+
 void Scene::onFixedUpdate() {
     mPlayer.onFixedUpdate();
     for (auto &chunk : mChunks) {
