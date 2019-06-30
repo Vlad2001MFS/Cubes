@@ -19,8 +19,8 @@ public:
         mScene = std::make_unique<Scene>(mWindow, mContext, *mBlockMgr);
         mRenderer = std::make_unique<Renderer>(mContext, *mBlockMgr);
 
-        for (int cz = 0; cz < 10; cz++) {
-            for (int cx = 0; cx < 10; cx++) {
+        for (int cz = -2; cz <= 2; cz++) {
+            for (int cx = -2; cx <= 2; cx++) {
                 auto chunk = mScene->createChunk(glm::ivec3(cx, 0, cz));
                 for (size_t z = 0; z < 16; z++) {
                     for (size_t y = 0; y < 256; y++) {
