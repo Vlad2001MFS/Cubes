@@ -1,6 +1,7 @@
 #include "Player.hpp"
+#include "Scene.hpp"
 
-Player::Player(hd::Window &window) : mWindow(window) {
+Player::Player(Scene &scene, hd::Window &window) : mScene(scene), mWindow(window) {
 }
 
 Player::~Player() {
@@ -42,6 +43,10 @@ void Player::onFixedUpdate() {
     if (mWindow.isKeyDown(hd::KeyCode::Right)) {
         mCamera.rotate(0.0f, speed, 0.0f);
     }
+}
+
+glm::vec3 Player::getDirection() const {
+    return mCamera.getDirectionLH();
 }
 
 glm::mat4 Player::getViewMatrix() const {
