@@ -14,7 +14,7 @@ void Player::onFixedUpdate() {
     mProcessLook();
 }
 
-glm::vec3 Player::getSelectedBlockPosition() const {
+glm::ivec3 Player::getSelectedBlockPosition() const {
     return glm::vec3(0, 0, 0);
 }
 

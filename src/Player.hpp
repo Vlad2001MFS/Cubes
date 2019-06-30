@@ -11,7 +11,7 @@ public:
 
     void onFixedUpdate();
 
-    glm::vec3 getSelectedBlockPosition() const;
+    glm::ivec3 getSelectedBlockPosition() const;
     glm::vec3 getDirection() const;
     glm::mat4 getViewMatrix() const;
 
