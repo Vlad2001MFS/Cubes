@@ -15,7 +15,12 @@ public:
     glm::mat4 getViewMatrix() const;
 
 private:
+    void mProcessMove();
+    void mProcessLook();
+
     Scene &mScene;
     hd::Window &mWindow;
     hd::FirstPersonCamera mCamera;
+    float mMoveSpeed;
+    float mLookSpeed;
 };
