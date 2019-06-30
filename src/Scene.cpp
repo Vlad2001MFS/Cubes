@@ -1,7 +1,7 @@
 #include "Scene.hpp"
 #include <algorithm>
 
-Scene::Scene(hd::RenderContext &renderContext, BlockManager &blockMgr) : mRenderContext(renderContext), mBlockMgr(blockMgr) {
+Scene::Scene(hd::Window &window, hd::RenderContext &renderContext, BlockManager &blockMgr) : mWindow(window), mRenderContext(renderContext), mBlockMgr(blockMgr), mPlayer(window) {
 }
 
 Scene::~Scene() {
@@ -32,9 +32,14 @@ void Scene::destroyChunk(const glm::ivec3 &pos) {
 }
 
 void Scene::onFixedUpdate() {
+    mPlayer.onFixedUpdate();
     for (auto &chunk : mChunks) {
         chunk->updateVertexBuffer();
     }
+}
+
+const Player &Scene::getPlayer() const {
+    return mPlayer;
 }
 
 const std::vector<Chunk*> &Scene::getChunks() const {
