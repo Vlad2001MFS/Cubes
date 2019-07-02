@@ -13,7 +13,7 @@ Scene::~Scene() {
 Chunk *Scene::createChunk(const glm::ivec3 &pos) {
     auto it = std::find_if(mChunks.begin(), mChunks.end(), [&](const Chunk *chunk) { return chunk->getPosition() == pos; });
     if (it == mChunks.end()) {
-        auto chunk = new Chunk(mRenderContext, pos);
+        Chunk *chunk = new Chunk(mRenderContext, pos);
         mChunks.push_back(chunk);
         return chunk;
     }
@@ -25,7 +25,7 @@ Chunk *Scene::createChunk(const glm::ivec3 &pos) {
 void Scene::destroyChunk(const glm::ivec3 &pos) {
     auto it = std::find_if(mChunks.begin(), mChunks.end(), [&](const Chunk *chunk) { return chunk->getPosition() == pos; });
     if (it != mChunks.end()) {
-        auto ptr = *it;
+        Chunk *ptr = *it;
         mChunks.erase(std::remove(mChunks.begin(), mChunks.end(), *it), mChunks.end());
         HD_DELETE(ptr);
     }

@@ -110,11 +110,11 @@ void Chunk::updateVertexBuffer() {
             }
         }
         mRenderContext.setVertexBufferData(mVertexBuffer, nullptr, sizeof(Vertex)*mVertexCount);
-        auto vertexData = static_cast<Vertex*>(mRenderContext.mapVertexBuffer(mVertexBuffer, hd::BufferAccess::Write));
+        Vertex *vertexData = static_cast<Vertex*>(mRenderContext.mapVertexBuffer(mVertexBuffer, hd::BufferAccess::Write));
         auto addFace = [&](const Vertex *verts, float x, float y, float z, float texId) {
             for (size_t i = 0; i < 6; i++) {
-                auto &v = verts[i];
-                auto &vertex = *vertexData++;
+                const Vertex &v = verts[i];
+                Vertex &vertex = *vertexData++;
                 vertex.pos.x = v.pos.x + x + mPos.x*SIZE_X / 2;
                 vertex.pos.y = v.pos.y + y + mPos.y*SIZE_Y / 2;
                 vertex.pos.z = v.pos.z + z + mPos.z*SIZE_Z / 2;
@@ -126,9 +126,9 @@ void Chunk::updateVertexBuffer() {
         for (size_t z = 0; z < SIZE_Z; z++) {
             for (size_t y = 0; y < SIZE_Y; y++) {
                 for (size_t x = 0; x < SIZE_X; x++) {
-                    auto block = mBlocks[x][y][z];
+                    BlockType block = mBlocks[x][y][z];
                     if (block != BlockType::Air) {
-                        auto texId = static_cast<float>(block) - 1.0f;
+                        float texId = static_cast<float>(block) - 1.0f;
                         if (!hasBlock(x, y, z - 1)) {
                             addFace(CUBE_FRONT, x, y, z, texId);
                         }
@@ -159,7 +159,7 @@ void Chunk::setBlock(BlockType type, const glm::ivec3 &pos) {
     HD_ASSERT(pos.x >= 0 && pos.x < SIZE_X);
     HD_ASSERT(pos.y >= 0 && pos.y < SIZE_Y);
     HD_ASSERT(pos.z >= 0 && pos.z < SIZE_Z);
-    auto &block = mBlocks[pos.x][pos.y][pos.z];
+    BlockType &block = mBlocks[pos.x][pos.y][pos.z];
     if (block != type) {
         block = type;
         mIsDirty = true;

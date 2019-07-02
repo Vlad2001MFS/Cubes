@@ -43,8 +43,8 @@ void Player::mProcessMove() {
 
 void Player::mProcessLook() {
     if (!mWindow.isKeyDown(hd::KeyCode::LControl)) {
-        auto deltaX = mWindow.getCenterX() - mWindow.getCursorPositionX();
-        auto deltaY = mWindow.getCenterY() - mWindow.getCursorPositionY();
+        int deltaX = mWindow.getCenterX() - mWindow.getCursorPositionX();
+        int deltaY = mWindow.getCenterY() - mWindow.getCursorPositionY();
         mCamera.rotate(glm::radians(mLookSpeed*deltaY), glm::radians(mLookSpeed*deltaX), 0.0f);
         mWindow.setCursorPosition(mWindow.getCenterX(), mWindow.getCenterY());
     }
