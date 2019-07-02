@@ -114,3 +114,7 @@ void Renderer::onDraw(const Scene &scene, const glm::mat4 &viewMat) {
     mRenderContext.bindVertexBuffer(mSelectBoxVertexBuffer, 0, 0, sizeof(Vertex));
     mRenderContext.draw(hd::PrimitiveType::Triangles, 36, 0);
 }
+
+const glm::mat4 &Renderer::getProjectionMatrix() const {
+    return mProjMat;
+}

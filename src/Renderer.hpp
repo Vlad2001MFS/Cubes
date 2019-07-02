@@ -9,6 +9,8 @@ public:
     void onResize(int w, int h);
     void onDraw(const Scene &scene, const glm::mat4 &viewMat);
 
+    const glm::mat4 &getProjectionMatrix() const;
+
 private:
     hd::RenderContext &mRenderContext;
     BlockManager &mBlockMgr;
