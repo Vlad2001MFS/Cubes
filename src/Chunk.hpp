@@ -24,7 +24,7 @@ public:
     void setBlock(BlockType type, const glm::ivec3 &pos);
     BlockType getBlock(const glm::ivec3 &pos) const;
     const hd::HVertexBuffer &getVertexBuffer() const;
-    size_t getVertexCount() const;
+    uint32_t getVertexCount() const;
     const glm::ivec3 &getPosition() const;
 
 private:
@@ -32,6 +32,6 @@ private:
     BlockType mBlocks[SIZE_X][SIZE_Y][SIZE_Z];
     glm::ivec3 mPos;
     hd::HVertexBuffer mVertexBuffer;
-    size_t mVertexCount;
+    uint32_t mVertexCount;
     bool mIsDirty;
 };

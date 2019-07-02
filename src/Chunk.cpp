@@ -80,8 +80,8 @@ void Chunk::updateVertexBuffer() {
     if (mIsDirty) {
         mIsDirty = false;
         mVertexCount = 0;
-        auto hasBlock = [&](int x, int y, int z) {
-            return x >= 0 && x < SIZE_X && y >= 0 && y < SIZE_Y && z >= 0 && z < SIZE_Z && mBlocks[x][y][z] != BlockType::Air;
+        auto hasBlock = [&](size_t x, size_t y, size_t z) {
+            return x < SIZE_X && y < SIZE_Y && z < SIZE_Z && mBlocks[x][y][z] != BlockType::Air;
         };
         for (size_t z = 0; z < SIZE_Z; z++) {
             for (size_t y = 0; y < SIZE_Y; y++) {
@@ -111,7 +111,7 @@ void Chunk::updateVertexBuffer() {
         }
         mRenderContext.setVertexBufferData(mVertexBuffer, nullptr, sizeof(Vertex)*mVertexCount);
         Vertex *vertexData = static_cast<Vertex*>(mRenderContext.mapVertexBuffer(mVertexBuffer, hd::BufferAccess::Write));
-        auto addFace = [&](const Vertex *verts, float x, float y, float z, float texId) {
+        auto addFace = [&](const Vertex *verts, size_t x, size_t y, size_t z, int texId) {
             for (size_t i = 0; i < 6; i++) {
                 const Vertex &v = verts[i];
                 Vertex &vertex = *vertexData++;
@@ -120,7 +120,7 @@ void Chunk::updateVertexBuffer() {
                 vertex.pos.z = v.pos.z + z + mPos.z*SIZE_Z / 2;
                 vertex.texCoord.x = v.texCoord.x;
                 vertex.texCoord.y = v.texCoord.y;
-                vertex.texCoord.z = texId;
+                vertex.texCoord.z = static_cast<float>(texId);
             }
         };
         for (size_t z = 0; z < SIZE_Z; z++) {
@@ -128,7 +128,7 @@ void Chunk::updateVertexBuffer() {
                 for (size_t x = 0; x < SIZE_X; x++) {
                     BlockType block = mBlocks[x][y][z];
                     if (block != BlockType::Air) {
-                        float texId = static_cast<float>(block) - 1.0f;
+                        int texId = static_cast<int>(block) - 1;
                         if (!hasBlock(x, y, z - 1)) {
                             addFace(CUBE_FRONT, x, y, z, texId);
                         }
@@ -177,7 +177,7 @@ const hd::HVertexBuffer &Chunk::getVertexBuffer() const {
     return mVertexBuffer;
 }
 
-size_t Chunk::getVertexCount() const {
+uint32_t Chunk::getVertexCount() const {
     return mVertexCount;
 }
 
