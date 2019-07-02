@@ -1,14 +1,21 @@
 #include "Scene.hpp"
+#include "hd/Core/hdStringUtils.hpp"
 #include <algorithm>
+#include <filesystem>
 
 Scene::Scene(hd::Window &window, hd::RenderContext &renderContext, BlockManager &blockMgr) : mWindow(window), mRenderContext(renderContext), mBlockMgr(blockMgr), mPlayer(*this, window) {
     mPlayer.setPosition(glm::vec3(0.0f, 130.0f, 0.0f));
 }
 
 Scene::~Scene() {
+    clear();
+}
+
+void Scene::clear() {
     for (auto &chunk : mChunks) {
         HD_DELETE(chunk);
     }
+    mChunks.clear();
 }
 
 Chunk *Scene::createChunk(const glm::ivec3 &pos) {
@@ -20,7 +27,7 @@ Chunk *Scene::createChunk(const glm::ivec3 &pos) {
         return chunk;
     }
     else {
-        return *it;
+        return nullptr;
     }
 }
 
@@ -36,6 +43,51 @@ void Scene::destroyChunk(const glm::ivec3 &pos) {
 Chunk *Scene::findChunkByPosition(const glm::ivec3 &pos) const {
     auto it = std::find_if(mChunks.begin(), mChunks.end(), [&](const Chunk *chunk) { return chunk->getPosition() == pos; });
     return it != mChunks.end() ? *it : nullptr;
+}
+
+void Scene::save(const std::string &name) {
+    std::string worldsFolder = "data/worlds";
+    if (!std::filesystem::exists(worldsFolder)) {
+        std::filesystem::create_directory(worldsFolder);
+    }
+    std::string worldFolder = worldsFolder + "/" + name;
+    if (std::filesystem::exists(worldFolder)) {
+        std::filesystem::remove_all(worldFolder);
+    }
+    if (!std::filesystem::exists(worldFolder)) {
+        std::filesystem::create_directory(worldFolder);
+    }
+
+    std::string worldMain = worldFolder + "/main.bin";
+    hd::Serializer main(worldMain);
+    mPlayer.save(main);
+    main.write<uint64_t>(mChunks.size());
+
+    for (uint64_t i = 0; i < mChunks.size(); i++) {
+        std::string chunkFile = worldFolder + "/chunk_" + hd::StringUtils::fromUint64(i) + ".bin";
+        hd::Serializer stream(chunkFile);
+        mChunks[i]->save(stream);
+    }
+}
+
+void Scene::load(const std::string &name) {
+    clear();
+
+    std::string worldFolder = "data/worlds/" + name;
+    if (std::filesystem::exists(worldFolder)) {
+        std::string worldMain = worldFolder + "/main.bin";
+        hd::Deserializer main(worldMain);
+
+        mPlayer.load(main);
+        uint64_t chunksCount = main.read<uint64_t>();
+
+        for (uint64_t i = 0; i < chunksCount; i++) {
+            std::string chunkFile = worldFolder + "/chunk_" + hd::StringUtils::fromUint64(i) + ".bin";
+            hd::Deserializer stream(chunkFile);
+            createChunk(glm::ivec3(0, 0, i))->load(stream);
+            HD_LOG_INFO("LOAD '%s'", chunkFile.data());
+        }
+    }
 }
 
 void Scene::setBlock(BlockType type, const glm::ivec3 &pos) {

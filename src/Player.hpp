@@ -1,6 +1,8 @@
 #pragma once
 #include "RaycastInfo.hpp"
 #include "hd/Math/hdFirstPersonCamera.hpp"
+#include "hd/IO/hdSerializer.hpp"
+#include "hd/IO/hdDeserializer.hpp"
 #include "hd/System/hdWindow.hpp"
 
 class Scene;
@@ -11,6 +13,9 @@ public:
     ~Player();
 
     void onFixedUpdate(const glm::mat4 &projMat);
+
+    void save(hd::Serializer &stream);
+    void load(hd::Deserializer &stream);
     
     void setPosition(const glm::vec3 &pos);
 

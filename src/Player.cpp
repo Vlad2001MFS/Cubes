@@ -17,6 +17,16 @@ void Player::onFixedUpdate(const glm::mat4 &projMat) {
     mProcessEditMap();
 }
 
+void Player::save(hd::Serializer &stream) {
+    stream.write(mCamera.getPosition());
+    stream.write(mCamera.getRotation());
+}
+
+void Player::load(hd::Deserializer &stream) {
+    mCamera.setPosition(stream.read<glm::vec3>());
+    mCamera.setRotation(stream.read<glm::vec3>());
+}
+
 void Player::setPosition(const glm::vec3& pos) {
     mCamera.setPosition(pos);
 }

@@ -2,3 +2,4 @@ bin/
 obj/
 *.dll
 Application.log
+data/worlds/

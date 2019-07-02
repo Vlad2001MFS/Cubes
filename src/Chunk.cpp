@@ -155,6 +155,16 @@ void Chunk::updateVertexBuffer() {
     }
 }
 
+void Chunk::save(hd::Serializer &stream) {
+    stream.write(mPos);
+    stream.write(mBlocks);
+}
+
+void Chunk::load(hd::Deserializer &stream) {
+    stream.readBuffer(&mPos, sizeof(mPos));
+    stream.read(mBlocks);
+}
+
 void Chunk::setBlock(BlockType type, const glm::ivec3 &pos) {
     if (glm::abs(pos.x) < SIZE_X && glm::abs(pos.y) < SIZE_Y && glm::abs(pos.z) < SIZE_Z) {
         int x = pos.x >= 0 ? pos.x : (SIZE_X + pos.x);

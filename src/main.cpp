@@ -19,7 +19,7 @@ public:
         mScene = std::make_unique<Scene>(mWindow, mContext, *mBlockMgr);
         mRenderer = std::make_unique<Renderer>(mContext, *mBlockMgr);
 
-        int halfSize = 1;
+        int halfSize = 10;
         for (int cz = -halfSize; cz <= halfSize; cz++) {
             for (int cx = -halfSize; cx <= halfSize; cx++) {
                 auto chunk = mScene->createChunk(glm::ivec3(cx, 0, cz));
@@ -54,6 +54,12 @@ public:
         }
         if (event.type == hd::WindowEventType::FocusGained || event.type == hd::WindowEventType::FocusLost) {
             mWindow.setCursorPosition(mWindow.getCenterX(), mWindow.getCenterY());
+        }
+        if (event.type == hd::WindowEventType::Key && event.key.state == hd::KeyState::Released && event.key.code == hd::KeyCode::F1) {
+            mScene->save("test");
+        }
+        if (event.type == hd::WindowEventType::Key && event.key.state == hd::KeyState::Released && event.key.code == hd::KeyCode::F2) {
+            mScene->load("test");
         }
     }
 

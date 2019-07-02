@@ -9,9 +9,14 @@ public:
     Scene(hd::Window &window, hd::RenderContext &renderContext, BlockManager &blockMgr);
     ~Scene();
 
+    void clear();
+
     Chunk *createChunk(const glm::ivec3 &pos);
     void destroyChunk(const glm::ivec3 &pos);
     Chunk *findChunkByPosition(const glm::ivec3 &pos) const;
+
+    void save(const std::string &name);
+    void load(const std::string &name);
 
     void setBlock(BlockType type, const glm::ivec3 &pos);
     BlockType getBlock(const glm::ivec3 &pos) const;

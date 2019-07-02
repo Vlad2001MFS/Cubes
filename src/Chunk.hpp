@@ -1,5 +1,7 @@
 #pragma once
 #include "BlockManager.hpp"
+#include "hd/IO/hdSerializer.hpp"
+#include "hd/IO/hdDeserializer.hpp"
 #include "3rd/include/glm/glm.hpp"
 
 struct Vertex {
@@ -20,6 +22,8 @@ public:
     ~Chunk();
 
     void updateVertexBuffer();
+    void save(hd::Serializer &stream);
+    void load(hd::Deserializer &stream);
 
     void setBlock(BlockType type, const glm::ivec3 &pos);
     BlockType getBlock(const glm::ivec3 &pos) const;
