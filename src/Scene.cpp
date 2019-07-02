@@ -44,9 +44,6 @@ void Scene::setBlock(BlockType type, const glm::ivec3 &pos) {
     if (chunk) {
         chunk->setBlock(type, mGetBlockLocalPos(pos));
     }
-    //else {
-        //HD_LOG_WARNING("Failed to set block on position (%d %d %d) at chunk on position (%d %d %d). The chunk is not exists", pos.x, pos.y, pos.z, chunkPos.x, chunkPos.y, chunkPos.z);
-    //}
 }
 
 BlockType Scene::getBlock(const glm::ivec3 &pos) const {
@@ -56,7 +53,6 @@ BlockType Scene::getBlock(const glm::ivec3 &pos) const {
         return chunk->getBlock(mGetBlockLocalPos(pos));
     }
     else {
-        //HD_LOG_WARNING("Failed to get block on position (%d %d %d) from chunk on position (%d %d %d). The chunk is not exists", pos.x, pos.y, pos.z, chunkPos.x, chunkPos.y, chunkPos.z);
         return BlockType::Air;
     }
 }
