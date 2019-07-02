@@ -4,6 +4,7 @@
 Player::Player(Scene &scene, hd::Window &window) : mScene(scene), mWindow(window) {
     mMoveSpeed = 0.1f;
     mLookSpeed = 0.2f;
+    mHasSelectedBlock = false;
 }
 
 Player::~Player() {
@@ -26,6 +27,10 @@ glm::vec3 Player::getDirection() const {
 
 glm::mat4 Player::getViewMatrix() const {
     return mCamera.getViewMatrixLH();
+}
+
+bool Player::hasSelectedBlock() const {
+    return mHasSelectedBlock;
 }
 
 const RaycastInfo &Player::getSelectedBlockRaycastInfo() const {
@@ -68,7 +73,6 @@ void Player::mProcessSelectBlock(const glm::mat4 &projMat) {
     glm::vec3 rayEnd = glm::unProject(glm::vec3(center, 1), getViewMatrix(), projMat, viewport);
     hd::Ray ray(rayBegin, glm::normalize(rayEnd - rayBegin));
     std::vector<RaycastInfo> intersections = mScene.raycast(ray, 10);
-    mSelectedBlockRaycast = RaycastInfo();
     if (!intersections.empty()) {
         mSelectedBlockRaycast = intersections.front();
         for (size_t i = 1; i < intersections.size(); i++) {
@@ -76,10 +80,8 @@ void Player::mProcessSelectBlock(const glm::mat4 &projMat) {
                 mSelectedBlockRaycast = intersections[i];
             }
         }
-        if (mSelectedBlockRaycast.blockType == BlockType::Air) {
-            mSelectedBlockRaycast = RaycastInfo();
-        }
     }
+    mHasSelectedBlock = !intersections.empty() && mSelectedBlockRaycast.intersection.hasIntersection && mSelectedBlockRaycast.blockType != BlockType::Air;
 }
 
 void Player::mProcessEditMap() {

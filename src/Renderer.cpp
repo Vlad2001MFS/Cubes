@@ -108,7 +108,7 @@ void Renderer::onDraw(const Scene &scene, const glm::mat4 &viewMat) {
         mRenderContext.draw(hd::PrimitiveType::Triangles, chunk->getVertexCount(), 0);
     }
 
-    if (scene.getPlayer().getSelectedBlockRaycastInfo().intersection.hasIntersection) {
+    if (scene.getPlayer().hasSelectedBlock()) {
         mRenderContext.setRasterizerState(hd::CullFace::Back, hd::FillMode::Wireframe, hd::FrontFace::CCW, hd::PolygonOffset());
         mRenderContext.bindProgram(mSelectBoxProgram);
         mRenderContext.setProgramConstant(mSelectBoxProgramProjMatId, mProjMat);

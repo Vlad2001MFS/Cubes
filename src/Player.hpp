@@ -16,6 +16,7 @@ public:
 
     glm::vec3 getDirection() const;
     glm::mat4 getViewMatrix() const;
+    bool hasSelectedBlock() const;
     const RaycastInfo &getSelectedBlockRaycastInfo() const;
     const glm::vec3 &getPosition() const;
 
@@ -31,4 +32,5 @@ private:
     float mMoveSpeed;
     float mLookSpeed;
     RaycastInfo mSelectedBlockRaycast;
+    bool mHasSelectedBlock;
 };
