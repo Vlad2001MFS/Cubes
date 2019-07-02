@@ -2,6 +2,7 @@
 #include <algorithm>
 
 Scene::Scene(hd::Window &window, hd::RenderContext &renderContext, BlockManager &blockMgr) : mWindow(window), mRenderContext(renderContext), mBlockMgr(blockMgr), mPlayer(*this, window) {
+    mPlayer.setPosition(glm::vec3(0.0f, 130.0f, 0.0f));
 }
 
 Scene::~Scene() {
