@@ -1,4 +1,5 @@
 #include "Renderer.hpp"
+#include "3rd/include/GLEW/glew.h"
 
 const Vertex SELECT_BOX[] = {
     { { -0.500000f, -0.500000f, -0.500000f }, /*{  0.000000f, -0.000000f, -1.000000f },*/ { 0.250000f, 0.656250f, 0.0f } },
@@ -103,16 +104,18 @@ void Renderer::onDraw(const Scene &scene, const glm::mat4 &viewMat) {
         mRenderContext.draw(hd::PrimitiveType::Triangles, chunk->getVertexCount(), 0);
     }
 
-    mRenderContext.setRasterizerState(hd::CullFace::Back, hd::FillMode::Wireframe, hd::FrontFace::CCW, hd::PolygonOffset());
-    mRenderContext.bindProgram(mSelectBoxProgram);
-    mRenderContext.setProgramConstant(mSelectBoxProgramProjMatId, mProjMat);
-    mRenderContext.setProgramConstant(mSelectBoxProgramViewMatId, viewMat);
-    glm::vec3 selectBoxPos = glm::vec3(0, 0, 0);
-    glm::vec3 selectBoxSize = glm::vec3(1.001f, 1.001f, 1.001f);
-    glm::mat4 worldMat = glm::translate(selectBoxPos)*glm::scale(selectBoxSize);
-    mRenderContext.setProgramConstant(mSelectBoxProgramWorldMatId, worldMat);
-    mRenderContext.bindVertexBuffer(mSelectBoxVertexBuffer, 0, 0, sizeof(Vertex));
-    mRenderContext.draw(hd::PrimitiveType::Triangles, 36, 0);
+    if (scene.getPlayer().getSelectedBlockRaycastInfo().intersection.hasIntersection) {
+        mRenderContext.setRasterizerState(hd::CullFace::Back, hd::FillMode::Wireframe, hd::FrontFace::CCW, hd::PolygonOffset());
+        mRenderContext.bindProgram(mSelectBoxProgram);
+        mRenderContext.setProgramConstant(mSelectBoxProgramProjMatId, mProjMat);
+        mRenderContext.setProgramConstant(mSelectBoxProgramViewMatId, viewMat);
+        glm::vec3 selectBoxPos = scene.getPlayer().getSelectedBlockRaycastInfo().blockPos;
+        glm::vec3 selectBoxSize = glm::vec3(1.008f, 1.008f, 1.008f);
+        glm::mat4 worldMat = glm::translate(selectBoxPos)*glm::scale(selectBoxSize);
+        mRenderContext.setProgramConstant(mSelectBoxProgramWorldMatId, worldMat);
+        mRenderContext.bindVertexBuffer(mSelectBoxVertexBuffer, 0, 0, sizeof(Vertex));
+        mRenderContext.draw(hd::PrimitiveType::Triangles, 36, 0);
+    }
 }
 
 const glm::mat4 &Renderer::getProjectionMatrix() const {

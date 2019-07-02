@@ -41,5 +41,8 @@
     <ClInclude Include="src\Player.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\RaycastInfo.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

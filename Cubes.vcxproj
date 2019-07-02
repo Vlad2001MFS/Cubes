@@ -30,6 +30,7 @@
     <ClInclude Include="src\BlockManager.hpp" />
     <ClInclude Include="src\Chunk.hpp" />
     <ClInclude Include="src\Player.hpp" />
+    <ClInclude Include="src\RaycastInfo.hpp" />
     <ClInclude Include="src\Renderer.hpp" />
     <ClInclude Include="src\Scene.hpp" />
   </ItemGroup>

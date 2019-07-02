@@ -59,7 +59,7 @@ public:
     void onFixedUpdate() {
         mWindow.setTitle(hd::StringUtils::format("Cubes | FPS: %d | FrameTime: %f", getFps(), getFrameTime()));
 
-        mScene->onFixedUpdate();
+        mScene->onFixedUpdate(mRenderer->getProjectionMatrix());
     }
 
     void onDraw() {

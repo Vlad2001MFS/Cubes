@@ -1,6 +1,8 @@
 #pragma once
 #include "Chunk.hpp"
 #include "Player.hpp"
+#include "RaycastInfo.hpp"
+#include "hd/Math/hdMathUtils.hpp"
 
 class Scene {
 public:
@@ -14,12 +16,17 @@ public:
     void setBlock(BlockType type, const glm::ivec3 &pos);
     BlockType getBlock(const glm::ivec3 &pos) const;
 
-    void onFixedUpdate();
+    std::vector<RaycastInfo> raycast(const hd::Ray &ray, int raycastRadius) const;
+
+    void onFixedUpdate(const glm::mat4 &projMat);
 
     const Player &getPlayer() const;
     const std::vector<Chunk*> &getChunks() const;
 
 private:
+    glm::ivec3 mGetChunkPos(const glm::ivec3 &pos) const;
+    glm::ivec3 mGetBlockLocalPos(const glm::ivec3 &pos) const;
+
     hd::Window &mWindow;
     hd::RenderContext &mRenderContext;
     BlockManager &mBlockMgr;

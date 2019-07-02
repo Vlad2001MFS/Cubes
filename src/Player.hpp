@@ -1,4 +1,5 @@
 #pragma once
+#include "RaycastInfo.hpp"
 #include "hd/Math/hdFirstPersonCamera.hpp"
 #include "hd/System/hdWindow.hpp"
 
@@ -9,19 +10,22 @@ public:
     Player(Scene &scene, hd::Window &window);
     ~Player();
 
-    void onFixedUpdate();
+    void onFixedUpdate(const glm::mat4 &projMat);
 
-    glm::ivec3 getSelectedBlockPosition() const;
     glm::vec3 getDirection() const;
     glm::mat4 getViewMatrix() const;
+    const RaycastInfo &getSelectedBlockRaycastInfo() const;
+    const glm::vec3 &getPosition() const;
 
 private:
     void mProcessMove();
     void mProcessLook();
+    void mProcessSelectBlock(const glm::mat4 &projMat);
 
     Scene &mScene;
     hd::Window &mWindow;
     hd::FirstPersonCamera mCamera;
     float mMoveSpeed;
     float mLookSpeed;
+    RaycastInfo mSelectedBlockRaycast;
 };
