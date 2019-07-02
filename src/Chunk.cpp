@@ -115,9 +115,9 @@ void Chunk::updateVertexBuffer() {
             for (size_t i = 0; i < 6; i++) {
                 const Vertex &v = verts[i];
                 Vertex &vertex = *vertexData++;
-                vertex.pos.x = v.pos.x + x + mPos.x*SIZE_X / 2;
-                vertex.pos.y = v.pos.y + y + mPos.y*SIZE_Y / 2;
-                vertex.pos.z = v.pos.z + z + mPos.z*SIZE_Z / 2;
+                vertex.pos.x = v.pos.x + x + mPos.x*SIZE_X;
+                vertex.pos.y = v.pos.y + y + mPos.y*SIZE_Y;
+                vertex.pos.z = v.pos.z + z + mPos.z*SIZE_Z;
                 vertex.texCoord.x = v.texCoord.x;
                 vertex.texCoord.y = v.texCoord.y;
                 vertex.texCoord.z = static_cast<float>(texId);
@@ -156,21 +156,28 @@ void Chunk::updateVertexBuffer() {
 }
 
 void Chunk::setBlock(BlockType type, const glm::ivec3 &pos) {
-    HD_ASSERT(pos.x >= 0 && pos.x < SIZE_X);
-    HD_ASSERT(pos.y >= 0 && pos.y < SIZE_Y);
-    HD_ASSERT(pos.z >= 0 && pos.z < SIZE_Z);
-    BlockType &block = mBlocks[pos.x][pos.y][pos.z];
-    if (block != type) {
-        block = type;
-        mIsDirty = true;
+    if (glm::abs(pos.x) < SIZE_X && glm::abs(pos.y) < SIZE_Y && glm::abs(pos.z) < SIZE_Z) {
+        int x = pos.x >= 0 ? pos.x : (SIZE_X + pos.x);
+        int y = pos.y >= 0 ? pos.y : (SIZE_Y + pos.y);
+        int z = pos.z >= 0 ? pos.z : (SIZE_Z + pos.z);
+        BlockType &block = mBlocks[x][y][z];
+        if (block != type) {
+            block = type;
+            mIsDirty = true;
+        }
     }
 }
 
 BlockType Chunk::getBlock(const glm::ivec3 &pos) const {
-    HD_ASSERT(pos.x >= 0 && pos.x < SIZE_X);
-    HD_ASSERT(pos.y >= 0 && pos.y < SIZE_Y);
-    HD_ASSERT(pos.z >= 0 && pos.z < SIZE_Z);
-    return  mBlocks[pos.x][pos.y][pos.z];
+    if (glm::abs(pos.x) < SIZE_X && glm::abs(pos.y) < SIZE_Y && glm::abs(pos.z) < SIZE_Z) {
+        int x = pos.x >= 0 ? pos.x : (SIZE_X + pos.x);
+        int y = pos.y >= 0 ? pos.y : (SIZE_Y + pos.y);
+        int z = pos.z >= 0 ? pos.z : (SIZE_Z + pos.z);
+        return mBlocks[x][y][z];
+    }
+    else {
+        return BlockType::Air;
+    }
 }
 
 const hd::HVertexBuffer &Chunk::getVertexBuffer() const {
