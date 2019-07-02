@@ -107,7 +107,10 @@ void Renderer::onDraw(const Scene &scene, const glm::mat4 &viewMat) {
     mRenderContext.bindProgram(mSelectBoxProgram);
     mRenderContext.setProgramConstant(mSelectBoxProgramProjMatId, mProjMat);
     mRenderContext.setProgramConstant(mSelectBoxProgramViewMatId, viewMat);
-    mRenderContext.setProgramConstant(mSelectBoxProgramWorldMatId, glm::translate(glm::vec3(scene.getPlayer().getSelectedBlockPosition()))*glm::scale(glm::vec3(1.001f, 1.001f, 1.001f)));
+    glm::vec3 selectBoxPos = glm::vec3(0, 0, 0);
+    glm::vec3 selectBoxSize = glm::vec3(1.001f, 1.001f, 1.001f);
+    glm::mat4 worldMat = glm::translate(selectBoxPos)*glm::scale(selectBoxSize);
+    mRenderContext.setProgramConstant(mSelectBoxProgramWorldMatId, worldMat);
     mRenderContext.bindVertexBuffer(mSelectBoxVertexBuffer, 0, 0, sizeof(Vertex));
     mRenderContext.draw(hd::PrimitiveType::Triangles, 36, 0);
 }
