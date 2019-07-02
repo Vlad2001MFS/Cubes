@@ -27,7 +27,7 @@ Chunk *Scene::createChunk(const glm::ivec3 &pos) {
         return chunk;
     }
     else {
-        return nullptr;
+        return *it;
     }
 }
 
