@@ -97,16 +97,18 @@ const std::vector<Chunk*> &Scene::getChunks() const {
 }
 
 glm::ivec3 Scene::mGetChunkPos(const glm::ivec3& pos) const {
-    glm::ivec3 result;
-    result.x = pos.x / Chunk::SIZE_X;
-    result.y = 0;
-    result.z = pos.z / Chunk::SIZE_Z;
-    if (pos.x < 0) {
+    glm::ivec3 result(0, 0, 0);
+    glm::ivec3 p = pos;
+    if (p.x < 0) {
+        p.x += 1;
         result.x -= 1;
     }
-    if (pos.z < 0) {
+    if (p.z < 0) {
+        p.z += 1;
         result.z -= 1;
     }
+    result.x += p.x / Chunk::SIZE_X;
+    result.z += p.z / Chunk::SIZE_Z;
     return result;
 }
 
