@@ -13,6 +13,11 @@ void Player::onFixedUpdate(const glm::mat4 &projMat) {
     mProcessMove();
     mProcessLook();
     mProcessSelectBlock(projMat);
+    mProcessEditMap();
+}
+
+void Player::setPosition(const glm::vec3& pos) {
+    mCamera.setPosition(pos);
 }
 
 glm::vec3 Player::getDirection() const {
@@ -74,5 +79,43 @@ void Player::mProcessSelectBlock(const glm::mat4 &projMat) {
         if (mSelectedBlockRaycast.blockType == BlockType::Air) {
             mSelectedBlockRaycast = RaycastInfo();
         }
+    }
+}
+
+void Player::mProcessEditMap() {
+    static bool isLBMPressed = false;
+    if (!isLBMPressed && mWindow.isMouseButtonDown(hd::MouseButton::Left)) {
+        isLBMPressed = true;
+        if (getSelectedBlockRaycastInfo().intersection.hasIntersection) {
+            mScene.setBlock(BlockType::Air, getSelectedBlockRaycastInfo().blockPos);
+        }
+    }
+    if (!mWindow.isMouseButtonDown(hd::MouseButton::Left)) {
+        isLBMPressed = false;
+    }
+
+    static BlockType buildBlock = BlockType::Dirt;
+    if (mWindow.isKeyDown(hd::KeyCode::Num1)) {
+        buildBlock = BlockType::Dirt;
+    }
+    if (mWindow.isKeyDown(hd::KeyCode::Num2)) {
+        buildBlock = BlockType::Grass;
+    }
+    if (mWindow.isKeyDown(hd::KeyCode::Num3)) {
+        buildBlock = BlockType::Stone;
+    }
+
+    static bool isRBMPressed = false;
+    if (!isRBMPressed && mWindow.isMouseButtonDown(hd::MouseButton::Right)) {
+        isRBMPressed = true;
+        if (getSelectedBlockRaycastInfo().intersection.hasIntersection) {
+            glm::vec3 blockPos = getSelectedBlockRaycastInfo().blockPos;
+            glm::vec3 intersectionPoint = getSelectedBlockRaycastInfo().intersection.point;
+            glm::vec3 newBlockPos = blockPos + glm::round(intersectionPoint - blockPos);
+            mScene.setBlock(buildBlock, newBlockPos);
+        }
+    }
+    if (!mWindow.isMouseButtonDown(hd::MouseButton::Right)) {
+        isRBMPressed = false;
     }
 }

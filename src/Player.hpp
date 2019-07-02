@@ -11,6 +11,8 @@ public:
     ~Player();
 
     void onFixedUpdate(const glm::mat4 &projMat);
+    
+    void setPosition(const glm::vec3 &pos);
 
     glm::vec3 getDirection() const;
     glm::mat4 getViewMatrix() const;
@@ -21,6 +23,7 @@ private:
     void mProcessMove();
     void mProcessLook();
     void mProcessSelectBlock(const glm::mat4 &projMat);
+    void mProcessEditMap();
 
     Scene &mScene;
     hd::Window &mWindow;
