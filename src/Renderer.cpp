@@ -63,7 +63,11 @@ Renderer::Renderer(hd::RenderContext &renderContext, BlockManager &blockMgr) : m
         hd::VertexElement(hd::VertexElementType::Float3, 2, 0, sizeof(float)*3, false, false)
     };
     mVertexFormat = mRenderContext.createVertexFormat(attribs);
-    mSamplerState = mRenderContext.createSamplerState(hd::SamplerFilter::Point);
+    hd::SamplerStateDesc samplerStateDesc;
+    samplerStateDesc.minFilter = hd::SamplerFilter::Point;
+    samplerStateDesc.magFilter = hd::SamplerFilter::Point;
+    samplerStateDesc.mipFilter = hd::SamplerFilter::Point;
+    mSamplerState = mRenderContext.createSamplerState(samplerStateDesc);
 
     mBlockProgram = mRenderContext.createProgramFromFile("data/shaders/block.glsl");
     mBlockProgramProjMatId = mRenderContext.getProgramConstantID(mBlockProgram, "gProjMat");
