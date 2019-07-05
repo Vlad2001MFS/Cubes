@@ -5,7 +5,8 @@ enum class BlockType : uint8_t {
     Air,
     Grass,
     Dirt,
-    Stone
+    Stone,
+    Count
 };
 
 class BlockManager {
