@@ -104,8 +104,10 @@ void Renderer::onDraw(const Scene &scene, const glm::mat4 &viewMat) {
     mRenderContext.setProgramConstant(mBlockProgramProjMatId, mProjMat);
     mRenderContext.setProgramConstant(mBlockProgramViewMatId, viewMat);
     for (const auto &chunk : scene.getChunks()) {
-        mRenderContext.bindVertexBuffer(chunk->getVertexBuffer(), 0, 0, sizeof(Vertex));
-        mRenderContext.draw(hd::PrimitiveType::Triangles, chunk->getVertexCount(), 0);
+        if (chunk->getVertexCount() != 0 && chunk->getVertexBuffer()) {
+            mRenderContext.bindVertexBuffer(chunk->getVertexBuffer(), 0, 0, sizeof(Vertex));
+            mRenderContext.draw(hd::PrimitiveType::Triangles, chunk->getVertexCount(), 0);
+        }
     }
 
     if (scene.getPlayer().hasSelectedBlock()) {

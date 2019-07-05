@@ -67,7 +67,7 @@ Vertex::Vertex(float x, float y, float z, float tx, float ty, float tz) : pos(x,
 }
 
 Chunk::Chunk(hd::RenderContext &renderContext, const glm::ivec3 &pos) : mRenderContext(renderContext), mPos(pos) {
-    mVertexBuffer = renderContext.createVertexBuffer(nullptr, sizeof(Vertex)*36, hd::BufferUsage::Static);
+    //mVertexBuffer = renderContext.createVertexBuffer(nullptr, sizeof(Vertex)*36, hd::BufferUsage::Static);
     mVertexCount = 0;
     mIsDirty = true;
 }
@@ -109,7 +109,12 @@ void Chunk::updateVertexBuffer() {
                 }
             }
         }
-        mRenderContext.setVertexBufferData(mVertexBuffer, nullptr, sizeof(Vertex)*mVertexCount);
+        if (mVertexBuffer) {
+            mRenderContext.setVertexBufferData(mVertexBuffer, nullptr, sizeof(Vertex)*mVertexCount);
+        }
+        else {
+            mVertexBuffer = mRenderContext.createVertexBuffer(nullptr, sizeof(Vertex)*mVertexCount, hd::BufferUsage::Static);
+        }
         Vertex *vertexData = static_cast<Vertex*>(mRenderContext.mapVertexBuffer(mVertexBuffer, hd::BufferAccess::Write));
         auto addFace = [&](const Vertex *verts, size_t x, size_t y, size_t z, int texId) {
             for (size_t i = 0; i < 6; i++) {
