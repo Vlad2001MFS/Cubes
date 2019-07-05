@@ -29,6 +29,7 @@ public:
     const std::vector<Chunk*> &getChunks() const;
 
 private:
+    void mDestroyChunk(Chunk *chunk);
     glm::ivec3 mGetChunkPos(const glm::ivec3 &pos) const;
     glm::ivec3 mGetBlockLocalPos(const glm::ivec3 &pos) const;
 

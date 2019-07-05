@@ -34,9 +34,7 @@ Chunk *Scene::createChunk(const glm::ivec3 &pos) {
 void Scene::destroyChunk(const glm::ivec3 &pos) {
     auto it = std::find_if(mChunks.begin(), mChunks.end(), [&](const Chunk *chunk) { return chunk->getPosition() == pos; });
     if (it != mChunks.end()) {
-        Chunk *ptr = *it;
-        mChunks.erase(std::remove(mChunks.begin(), mChunks.end(), *it), mChunks.end());
-        HD_DELETE(ptr);
+        mDestroyChunk(*it);
     }
 }
 
@@ -146,6 +144,11 @@ const Player &Scene::getPlayer() const {
 
 const std::vector<Chunk*> &Scene::getChunks() const {
     return mChunks;
+}
+
+void Scene::mDestroyChunk(Chunk *chunk) {
+    mChunks.erase(std::remove(mChunks.begin(), mChunks.end(), chunk), mChunks.end());
+    HD_DELETE(chunk);
 }
 
 glm::ivec3 Scene::mGetChunkPos(const glm::ivec3& pos) const {
