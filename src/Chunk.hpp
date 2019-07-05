@@ -29,6 +29,7 @@ public:
     BlockType getBlock(const glm::ivec3 &pos) const;
     const hd::HVertexBuffer &getVertexBuffer() const;
     uint32_t getVertexCount() const;
+    glm::ivec3 getGlobalBlockPosition(const glm::ivec3 &pos) const;
     const glm::ivec3 &getPosition() const;
 
 private:

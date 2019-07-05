@@ -198,6 +198,10 @@ uint32_t Chunk::getVertexCount() const {
     return mVertexCount;
 }
 
+glm::ivec3 Chunk::getGlobalBlockPosition(const glm::ivec3& pos) const {
+    return glm::ivec3(pos.x + mPos.x*SIZE_X, pos.y + mPos.y*SIZE_Y, pos.z + mPos.z*SIZE_Z);
+}
+
 const glm::ivec3 &Chunk::getPosition() const {
     return mPos;
 }
