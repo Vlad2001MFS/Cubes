@@ -5,6 +5,7 @@
 
 Scene::Scene(hd::Window &window, hd::RenderContext &renderContext, BlockManager &blockMgr) : mWindow(window), mRenderContext(renderContext), mBlockMgr(blockMgr), mPlayer(*this, window) {
     mPlayer.setPosition(glm::vec3(0.0f, 130.0f, 0.0f));
+    mViewDistance = 5;
 }
 
 Scene::~Scene() {
@@ -23,6 +24,24 @@ Chunk *Scene::createChunk(const glm::ivec3 &pos) {
     auto it = std::find_if(mChunks.begin(), mChunks.end(), [&](const Chunk *chunk) { return chunk->getPosition() == pos; });
     if (it == mChunks.end()) {
         Chunk *chunk = new Chunk(mRenderContext, pos);
+        for (size_t z = 0; z < 16; z++) {
+            for (size_t y = 0; y < 256; y++) {
+                for (size_t x = 0; x < 16; x++) {
+                    if (y < 42) {
+                        chunk->setBlock(BlockType::Stone, glm::ivec3(x, y, z));
+                    }
+                    else if (y < 84) {
+                        chunk->setBlock(BlockType::Dirt, glm::ivec3(x, y, z));
+                    }
+                    else if (y < 128) {
+                        chunk->setBlock(BlockType::Grass, glm::ivec3(x, y, z));
+                    }
+                    else {
+                        chunk->setBlock(BlockType::Air, glm::ivec3(x, y, z));
+                    }
+                }
+            }
+        }
         mChunks.push_back(chunk);
         return chunk;
     }
@@ -133,6 +152,32 @@ std::vector<RaycastInfo> Scene::raycast(const hd::Ray& ray, int raycastRadius) c
 
 void Scene::onFixedUpdate(const glm::mat4 &projMat) {
     mPlayer.onFixedUpdate(projMat);
+
+    glm::ivec3 currentChunkPos = mGetChunkPos(mPlayer.getPosition());
+    int xMin = currentChunkPos.x - mViewDistance;
+    int xMax = currentChunkPos.x + mViewDistance;
+    int zMin = currentChunkPos.z - mViewDistance;
+    int zMax = currentChunkPos.z + mViewDistance;
+    bool isChunkCreated = false;
+    for (int z = zMin; z <= zMax; z++) {
+        for (int x = xMin; x <= xMax; x++) {
+            if (!isChunkCreated) {
+                auto it = std::find_if(mChunks.begin(), mChunks.end(), [&](const Chunk *chunk) { return chunk->getPosition().x == x && chunk->getPosition().z == z; });
+                if (it == mChunks.end()) {
+                    isChunkCreated = true;
+                    createChunk(glm::ivec3(x, 0, z));
+                }
+            }
+        }
+    }
+
+    for (auto &chunk : mChunks) {
+        if (chunk->getPosition().x < xMin || chunk->getPosition().x > xMax || chunk->getPosition().z < zMin || chunk->getPosition().z > zMax) {
+            mDestroyChunk(chunk);
+            break;
+        }
+    }
+
     for (auto &chunk : mChunks) {
         chunk->updateVertexBuffer();
     }

@@ -38,4 +38,5 @@ private:
     BlockManager &mBlockMgr;
     Player mPlayer;
     std::vector<Chunk*> mChunks;
+    int mViewDistance;
 };

@@ -19,7 +19,7 @@ public:
         mScene = std::make_unique<Scene>(mWindow, mContext, *mBlockMgr);
         mRenderer = std::make_unique<Renderer>(mContext, *mBlockMgr);
 
-        int halfSize = 1;
+        /*int halfSize = 1;
         for (int cz = -halfSize; cz <= halfSize; cz++) {
             for (int cx = -halfSize; cx <= halfSize; cx++) {
                 auto chunk = mScene->createChunk(glm::ivec3(cx, 0, cz));
@@ -42,7 +42,7 @@ public:
                     }
                 }
             }
-        }
+        }*/
     }
 
     void onEvent(const hd::WindowEvent &event) {
