@@ -18,31 +18,6 @@ public:
         mBlockMgr = std::make_unique<BlockManager>(mContext);
         mScene = std::make_unique<Scene>(mWindow, mContext, *mBlockMgr);
         mRenderer = std::make_unique<Renderer>(mContext, *mBlockMgr);
-
-        /*int halfSize = 1;
-        for (int cz = -halfSize; cz <= halfSize; cz++) {
-            for (int cx = -halfSize; cx <= halfSize; cx++) {
-                auto chunk = mScene->createChunk(glm::ivec3(cx, 0, cz));
-                for (size_t z = 0; z < 16; z++) {
-                    for (size_t y = 0; y < 256; y++) {
-                        for (size_t x = 0; x < 16; x++) {
-                            if (y < 42) {
-                                chunk->setBlock(BlockType::Stone, glm::ivec3(x, y, z));
-                            }
-                            else if (y < 84) {
-                                chunk->setBlock(BlockType::Dirt, glm::ivec3(x, y, z));
-                            }
-                            else if (y < 128) {
-                                chunk->setBlock(BlockType::Grass, glm::ivec3(x, y, z));
-                            }
-                            else {
-                                chunk->setBlock(BlockType::Air, glm::ivec3(x, y, z));
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
     }
 
     void onEvent(const hd::WindowEvent &event) {
