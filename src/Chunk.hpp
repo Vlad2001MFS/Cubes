@@ -33,6 +33,10 @@ public:
     const glm::ivec3 &getPosition() const;
 
 private:
+    bool mHasBlock(size_t x, size_t y, size_t z);
+    uint32_t mCalcVertexCount();
+    void mAddFace(Vertex *&vertexData, const Vertex *verts, size_t x, size_t y, size_t z, int texId);
+
     hd::RenderContext &mRenderContext;
     BlockType mBlocks[SIZE_X][SIZE_Y][SIZE_Z];
     glm::ivec3 mPos;

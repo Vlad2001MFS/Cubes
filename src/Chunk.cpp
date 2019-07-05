@@ -79,36 +79,7 @@ Chunk::~Chunk() {
 void Chunk::updateVertexBuffer() {
     if (mIsDirty) {
         mIsDirty = false;
-        mVertexCount = 0;
-        auto hasBlock = [&](size_t x, size_t y, size_t z) {
-            return x < SIZE_X && y < SIZE_Y && z < SIZE_Z && mBlocks[x][y][z] != BlockType::Air;
-        };
-        for (size_t z = 0; z < SIZE_Z; z++) {
-            for (size_t y = 0; y < SIZE_Y; y++) {
-                for (size_t x = 0; x < SIZE_X; x++) {
-                    if (mBlocks[x][y][z] != BlockType::Air) {
-                        if (!hasBlock(x, y, z - 1)) {
-                            mVertexCount += 6;
-                        }
-                        if (!hasBlock(x, y, z + 1)) {
-                            mVertexCount += 6;
-                        }
-                        if (!hasBlock(x, y + 1, z)) {
-                            mVertexCount += 6;
-                        }
-                        if (!hasBlock(x, y - 1, z)) {
-                            mVertexCount += 6;
-                        }
-                        if (!hasBlock(x - 1, y, z)) {
-                            mVertexCount += 6;
-                        }
-                        if (!hasBlock(x + 1, y, z)) {
-                            mVertexCount += 6;
-                        }
-                    }
-                }
-            }
-        }
+        mVertexCount = mCalcVertexCount();
         if (mVertexBuffer) {
             mRenderContext.setVertexBufferData(mVertexBuffer, nullptr, sizeof(Vertex)*mVertexCount);
         }
@@ -116,41 +87,29 @@ void Chunk::updateVertexBuffer() {
             mVertexBuffer = mRenderContext.createVertexBuffer(nullptr, sizeof(Vertex)*mVertexCount, hd::BufferUsage::Static);
         }
         Vertex *vertexData = static_cast<Vertex*>(mRenderContext.mapVertexBuffer(mVertexBuffer, hd::BufferAccess::Write));
-        auto addFace = [&](const Vertex *verts, size_t x, size_t y, size_t z, int texId) {
-            for (size_t i = 0; i < 6; i++) {
-                const Vertex &v = verts[i];
-                Vertex &vertex = *vertexData++;
-                vertex.pos.x = v.pos.x + x + mPos.x*SIZE_X;
-                vertex.pos.y = v.pos.y + y + mPos.y*SIZE_Y;
-                vertex.pos.z = v.pos.z + z + mPos.z*SIZE_Z;
-                vertex.texCoord.x = v.texCoord.x;
-                vertex.texCoord.y = v.texCoord.y;
-                vertex.texCoord.z = static_cast<float>(texId);
-            }
-        };
         for (size_t z = 0; z < SIZE_Z; z++) {
             for (size_t y = 0; y < SIZE_Y; y++) {
                 for (size_t x = 0; x < SIZE_X; x++) {
                     BlockType block = mBlocks[x][y][z];
                     if (block != BlockType::Air) {
                         int texId = static_cast<int>(block) - 1;
-                        if (!hasBlock(x, y, z - 1)) {
-                            addFace(CUBE_FRONT, x, y, z, texId);
+                        if (!mHasBlock(x, y, z - 1)) {
+                            mAddFace(vertexData, CUBE_FRONT, x, y, z, texId);
                         }
-                        if (!hasBlock(x, y, z + 1)) {
-                            addFace(CUBE_BACK, x, y, z, texId);
+                        if (!mHasBlock(x, y, z + 1)) {
+                            mAddFace(vertexData, CUBE_BACK, x, y, z, texId);
                         }
-                        if (!hasBlock(x, y + 1, z)) {
-                            addFace(CUBE_UP, x, y, z, texId);
+                        if (!mHasBlock(x, y + 1, z)) {
+                            mAddFace(vertexData, CUBE_UP, x, y, z, texId);
                         }
-                        if (!hasBlock(x, y - 1, z)) {
-                            addFace(CUBE_DOWN, x, y, z, texId);
+                        if (!mHasBlock(x, y - 1, z)) {
+                            mAddFace(vertexData, CUBE_DOWN, x, y, z, texId);
                         }
-                        if (!hasBlock(x - 1, y, z)) {
-                            addFace(CUBE_LEFT, x, y, z, texId);
+                        if (!mHasBlock(x - 1, y, z)) {
+                            mAddFace(vertexData, CUBE_LEFT, x, y, z, texId);
                         }
-                        if (!hasBlock(x + 1, y, z)) {
-                            addFace(CUBE_RIGHT, x, y, z, texId);
+                        if (!mHasBlock(x + 1, y, z)) {
+                            mAddFace(vertexData, CUBE_RIGHT, x, y, z, texId);
                         }
                     }
                 }
@@ -209,4 +168,52 @@ glm::ivec3 Chunk::getGlobalBlockPosition(const glm::ivec3& pos) const {
 
 const glm::ivec3 &Chunk::getPosition() const {
     return mPos;
+}
+
+bool Chunk::mHasBlock(size_t x, size_t y, size_t z) {
+    return x < SIZE_X && y < SIZE_Y && z < SIZE_Z && mBlocks[x][y][z] != BlockType::Air;
+}
+
+uint32_t Chunk::mCalcVertexCount() {
+    uint32_t vertexCount = 0;
+    for (size_t z = 0; z < SIZE_Z; z++) {
+        for (size_t y = 0; y < SIZE_Y; y++) {
+            for (size_t x = 0; x < SIZE_X; x++) {
+                if (mBlocks[x][y][z] != BlockType::Air) {
+                    if (!mHasBlock(x, y, z - 1)) {
+                        vertexCount += 6;
+                    }
+                    if (!mHasBlock(x, y, z + 1)) {
+                        vertexCount += 6;
+                    }
+                    if (!mHasBlock(x, y + 1, z)) {
+                        vertexCount += 6;
+                    }
+                    if (!mHasBlock(x, y - 1, z)) {
+                        vertexCount += 6;
+                    }
+                    if (!mHasBlock(x - 1, y, z)) {
+                        vertexCount += 6;
+                    }
+                    if (!mHasBlock(x + 1, y, z)) {
+                        vertexCount += 6;
+                    }
+                }
+            }
+        }
+    }
+    return vertexCount;
+}
+
+void Chunk::mAddFace(Vertex *&vertexData, const Vertex *verts, size_t x, size_t y, size_t z, int texId) {
+    for (size_t i = 0; i < 6; i++) {
+        const Vertex &v = verts[i];
+        Vertex &vertex = *vertexData++;
+        vertex.pos.x = v.pos.x + x + mPos.x*SIZE_X;
+        vertex.pos.y = v.pos.y + y + mPos.y*SIZE_Y;
+        vertex.pos.z = v.pos.z + z + mPos.z*SIZE_Z;
+        vertex.texCoord.x = v.texCoord.x;
+        vertex.texCoord.y = v.texCoord.y;
+        vertex.texCoord.z = static_cast<float>(texId);
+    }
 }
