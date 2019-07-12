@@ -3,3 +3,4 @@ obj/
 *.dll
 Application.log
 data/worlds/
+Cubes.vcxproj.user
